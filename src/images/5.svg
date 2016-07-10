@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="600"
+   height="600"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.4 r9939"
+   sodipodi:docname="5.19.1.svg">
+  <title
+     id="title3002">5.19.2 Пешеходный переход</title>
+  <defs
+     id="defs4" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1"
+     inkscape:cx="255.80193"
+     inkscape:cy="295.19175"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1920"
+     inkscape:window-height="1024"
+     inkscape:window-x="-4"
+     inkscape:window-y="-4"
+     inkscape:window-maximized="1"
+     inkscape:snap-bbox="false"
+     inkscape:bbox-paths="false"
+     inkscape:bbox-nodes="false"
+     inkscape:snap-bbox-edge-midpoints="false"
+     inkscape:snap-bbox-midpoints="false"
+     inkscape:object-paths="false"
+     inkscape:snap-intersection-paths="false"
+     inkscape:object-nodes="false"
+     inkscape:snap-smooth-nodes="false" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>5.19.2 Пешеходный переход</dc:title>
+        <cc:license
+           rdf:resource="http://creativecommons.org/licenses/by-sa/3.0/" />
+        <dc:description>ГОСТ Р 52290-2004
+Размеры и пропорции по типоразмеру I</dc:description>
+      </cc:Work>
+      <cc:License
+         rdf:about="http://creativecommons.org/licenses/by-sa/3.0/">
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Reproduction" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Distribution" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#Notice" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#Attribution" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#DerivativeWorks" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#ShareAlike" />
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-452.36218)">
+    <rect
+       ry="45"
+       rx="45"
+       style="color:#000000;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:2;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate;opacity:1"
+       id="rect7667"
+       width="600"
+       height="600"
+       x="0"
+       y="452.36218" />
+    <rect
+       y="453.36218"
+       x="1"
+       height="598"
+       width="598"
+       id="rect7101"
+       style="color:#000000;fill:none;stroke:#000000;stroke-width:2;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate;fill-opacity:1;opacity:1"
+       rx="44"
+       ry="44" />
+    <path
+       style="opacity:1;color:#000000;fill:#0d69e1;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:3.54299997999999980;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       d="M 45 20 C 31.15 20 20 31.15 20 45 L 20 555 C 20 568.85 31.15 580 45 580 L 555 580 C 568.85 580 580 568.85 580 555 L 580 45 C 580 31.15 568.85 20 555 20 L 45 20 z M 300.28125 42.84375 C 301.89321 42.885621 303.50534 43.324531 305 44.1875 C 306.5202 45.0651 307.77865 46.32355 308.65625 47.84375 L 553.84375 472.5 C 554.72135 474.0202 555.1875 475.7446 555.1875 477.5 C 555.1875 483.0228 550.7104 487.5 545.1875 487.5 L 54.8125 487.5 C 49.2896 487.5 44.8125 483.0228 44.8125 477.5 C 44.8125 475.7446 45.27855 474.0202 46.15625 472.5 L 291.34375 47.84375 C 293.24228 44.555506 296.73494 42.751633 300.28125 42.84375 z "
+       transform="translate(0,452.36218)"
+       id="rect9536" />
+    <path
+       sodipodi:nodetypes="ccccc"
+       inkscape:connector-curvature="0"
+       id="path11856"
+       d="m 154.6641,871.51862 -36.5624,54.8437 51.1875,0 21.9375,-54.8437 z"
+       style="opacity:1;fill:#000000;fill-opacity:1;stroke:none" />
+    <path
+       style="opacity:1;fill:#000000;fill-opacity:1;stroke:none"
+       d="m 445.3358,871.51862 36.5626,54.8437 -51.1875,0 -21.9375,-54.8437 z"
+       id="path11858"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccccc" />
+    <path
+       sodipodi:nodetypes="ccccc"
+       inkscape:connector-curvature="0"
+       id="path11860"
+       d="m 316.4531,871.51862 7.3125,54.8437 -47.5312,0 7.3125,-54.8437 z"
+       style="opacity:1;fill:#000000;fill-opacity:1;stroke:none" />
+    <path
+       style="opacity:1;fill:#000000;fill-opacity:1;stroke:none"
+       d="m 336.6562,605.92478 c 0,13.6343 -9.6508,25.6874 -21.8437,25.6874 -13.3608,0 -36.5625,-13.5891 -36.5625,-32.9999 0,-13.8854 11.5535,-24 24.375,-24 20.4152,0 34.0312,15.6697 34.0312,31.3125 z"
+       id="path12569"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccccc" />
+    <path
+       style="opacity:1;color:#000000;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:3.54299997999999980;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       d="M 268.2698,760.69957 199.577,879.67908 c -2.3814,2.8449 -3.8268,6.5098 -3.8268,10.5101 0,9.0491 7.3358,16.3849 16.385,16.3849 6.1082,0 11.4382,-3.3447 14.256,-8.3003 l 0.1886,0.1078 65.6746,-113.69751 z"
+       id="path12571"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccsscccc" />
+    <path
+       style="opacity:1;color:#000000;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1px;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       d="m 327.4496,688.98847 0,36.5966 30.1828,30.1559 c 2.341,2.3407 5.5637,3.7998 9.1357,3.7998 7.1441,0 12.9355,-5.7914 12.9355,-12.9355 0,-3.572 -1.459,-6.7948 -3.7998,-9.1357 z"
+       id="path12573"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cccsscc" />
+    <path
+       id="path12575"
+       style="opacity:1;color:#000000;fill:#000000;fill-opacity:1;stroke:none;stroke-width:2.55223870000000020;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       d="m 360.8734,786.25617 -42.8289,-42.8579 0,-91.7071 c 0,-3.081 -1.6437,-5.9514 -4.3119,-7.4918 l -22.2328,-12.82769 c -2.6682,-1.5404 -5.646,-2.2906 -8.6236,-2.2906 -2.9778,-1e-4 -5.9555,0.7502 -8.6237,2.2906 l -54.9489,31.74579 c -5.3363,3.081 -8.6237,8.7679 -8.6237,14.9297 l 0,60.3656 c 0,7.1441 5.7914,12.9355 12.9355,12.9355 7.1441,0 12.9355,-5.7914 12.9355,-12.9355 l 0,-55.3801 26.7333,-15.4416 0,72.3578 c 0,2.2871 0.916,4.4732 2.5332,6.0905 l 70.1211,70.148 19.4842,77.96331 c 2.1946,8.7789 11.1092,14.1331 19.8882,11.9383 8.779,-2.1947 14.1061,-11.1093 11.9115,-19.8883 l -23.972,-95.82741 c -0.3909,-1.568 -1.2145,-2.9946 -2.377,-4.1171 z"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccscccccssssccscccsccc" />
+  </g>
+</svg>
