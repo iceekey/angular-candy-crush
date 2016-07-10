@@ -1,0 +1,38 @@
+{
+  "name": "angular-three-in-a-row",
+  "version": "0.1.0",
+  "description": "A small Candy Crash Saga clone using road signs as tiles and written in Angular.",
+  "scripts": {
+    "start": "webpack-dev-server --inline --progress",
+    "build": "webpack --progress"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iceekey/angular-three-in-a-row.git"
+  },
+  "author": "Iceekey <iceekey@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/iceekey/angular-three-in-a-row/issues"
+  },
+  "homepage": "https://github.com/iceekey/angular-three-in-a-row#readme",
+  "devDependencies": {
+    "angular": "^1.5.7",
+    "autoprefixer": "^6.3.7",
+    "babel-core": "^6.10.4",
+    "babel-loader": "^6.2.4",
+    "babel-preset-es2015": "^6.9.0",
+    "css-loader": "^0.23.1",
+    "extract-text-webpack-plugin": "^1.0.1",
+    "html-webpack-plugin": "^2.22.0",
+    "node-sass": "^3.8.0",
+    "postcss-loader": "^0.9.1",
+    "precss": "^1.4.0",
+    "raw-loader": "^0.5.1",
+    "reset-css": "^2.0.2011012603",
+    "sass-loader": "^4.0.0",
+    "style-loader": "^0.13.1",
+    "webpack": "^1.13.1",
+    "webpack-dev-server": "^1.14.1"
+  }
+}
