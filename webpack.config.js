@@ -27,7 +27,12 @@ module.exports = {
                 query: { presets: ['es2015'] }
             },
             { test: /\.html$/, loader: 'raw' },
-            { test: /\.scss$/, loader: scss.extract('style-loader', 'css!postcss!sass') }
+            { test: /\.scss$/, loader: scss.extract('style-loader', 'css!postcss!sass') },
+            {
+                test: /\.(jpg|jpeg|gif|png|ico)$/,
+                exclude: /node_modules/,
+                loader: `file-loader?name=images/[name].[ext]&context=./${APP_DIR}/images`
+            }
         ]
     },
     resolve: {
