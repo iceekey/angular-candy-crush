@@ -22,17 +22,10 @@ module.exports = {
     },
     module: {
         loaders: [
-            { 
-                test: /\.js$/, exclude: /node_modules/, loader: 'babel', 
-                query: { presets: ['es2015'] }
-            },
-            { test: /\.html$/, loader: 'raw' },
+            { test: /\.js$/, exclude: /node_modules/, loader: 'babel', query: { presets: ['es2015'] } },
+            { test: /\.(html|svg)$/, loader: 'raw' },
             { test: /\.scss$/, loader: scss.extract('style-loader', 'css!postcss!sass') },
-            {
-                test: /\.(jpg|jpeg|gif|png|ico)$/,
-                exclude: /node_modules/,
-                loader: `file-loader?name=images/[name].[ext]&context=./${APP_DIR}/images`
-            }
+            { test: /\.(jpg|jpeg|gif|png|ico)$/, exclude: /node_modules/, loader: `file-loader?name=images/[name].[ext]` }
         ]
     },
     resolve: {

@@ -3,3 +3,18 @@
 *, *:before, *:after {
   box-sizing: border-box;
 }
+
+$tile-size: 4vw;
+
+// Components
+
+tile {
+  display: block;
+  height: $tile-size;
+  width: $tile-size;
+
+  svg {
+    height: $tile-size;
+    width: $tile-size;
+  }
+}
