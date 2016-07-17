@@ -1,20 +1,66 @@
 @import '~reset-css/_reset.scss';
+@import 'fonts';
 
 *, *:before, *:after {
   box-sizing: border-box;
 }
 
-$tile-size: 4vw;
+$grid-columns-count: 9;
+$grid-rows-count: 9;
+
+$tile-size: 45px;
+$grid-width: $grid-columns-count * $tile-size;
+$grid-height: $grid-rows-count * $tile-size;
+
+// General
+
+.button {
+  display: inline-block;
+  cursor: pointer;
+
+  padding: 10px 12px;
+  
+  white-space: nowrap;
+  font-size: 18px;
+  color: #996633;
+
+  text-shadow: 0 1px 0 #fedd9b;
+  transition: all 0.3s linear;
+  background: -webkit-linear-gradient(top, #feda71 0%, #febb4a 100%);
+  
+  border: 1px solid #f5b74e;
+  border-color: #f5b74e #e5a73e; 
+
+  border-radius: 2px;
+  box-shadow: 0 1px 1px #d3d3d3, inset 0 1px 0 #fee395;
+  height: 38px;
+}
 
 // Components
+
+grid {
+  display: block;
+
+  width: $grid-width;
+  height: $grid-height;
+
+  margin: 20px auto 0 auto;
+}
 
 tile {
   display: block;
   height: $tile-size;
   width: $tile-size;
+  cursor: pointer;
 
   svg {
-    height: $tile-size;
-    width: $tile-size;
+    display: block;
+    
+    margin-left: auto;
+    margin-right: auto;
+
+    max-height: $tile-size;
+    max-width: $tile-size;
   }
 }
+

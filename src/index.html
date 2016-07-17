@@ -6,8 +6,9 @@
     <link rel="icon" type="image/png" href="images/favicon.png">
 </head>
 <body>
-    <div class="game-wrapper" ng-app="app">
-        <tile></tile>
+    <div class="game-wrapper" ng-app="app" ng-controller="GameController">
+        <div class="button" ng-click="startGame()">Start game</div>
+        <grid></grid>
     </div>
 </body>
 </html>

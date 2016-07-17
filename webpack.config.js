@@ -25,7 +25,13 @@ module.exports = {
             { test: /\.js$/, exclude: /node_modules/, loader: 'babel', query: { presets: ['es2015'] } },
             { test: /\.(html|svg)$/, loader: 'raw' },
             { test: /\.scss$/, loader: scss.extract('style-loader', 'css!postcss!sass') },
-            { test: /\.(jpg|jpeg|gif|png|ico)$/, exclude: /node_modules/, loader: `file-loader?name=images/[name].[ext]` }
+            { test: /\.(jpg|jpeg|gif|png|ico)$/, exclude: /node_modules/, loader: `file-loader?name=images/[name].[ext]` },
+            { test: /.*signs.*\.svg$/, exclude: /node_modules/, loader: `file-loader?name=images/signs/[name].[ext]` },
+            { test: /.*fonts.*\.svg$/, loader: 'file-loader?mimetype=image/svg+xml&name=fonts/[name].[ext]' },
+            { test: /.*fonts.*\.woff$/, loader: 'file-loader?mimetype=application/font-woff&name=fonts/[name].[ext]' },
+            { test: /.*fonts.*\.woff2$/, loader: 'file-loader?mimetype=application/font-woff&name=fonts/[name].[ext]' },
+            { test: /.*fonts.*\.ttf$/, loader: 'file-loader?mimetype=application/octet-stream&name=fonts/[name].[ext]' },
+            { test: /.*fonts.*\.eot$/, loader: 'file-loader?name=fonts/[name].[ext]'},
         ]
     },
     resolve: {

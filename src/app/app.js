@@ -5,10 +5,12 @@ import './../images/favicon.png';
 
 import angular from 'angular';
 
+import controllers from './controllers';
 import components from './components';
 
-angular.module('app', [], () => {
+angular.module('app', [], function() {
     
 });
 
 components();
+controllers();
