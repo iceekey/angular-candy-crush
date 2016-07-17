@@ -4,8 +4,8 @@
 $grid-columns-count: 9 !default;
 $grid-rows-count: 9 !default;
 
-$tile-size: 45px !default;
 $tile-padding: 10px !default;
+$tile-size: 45px !default;
 
 $grid-width: $grid-columns-count * $tile-size !default;
 $grid-height: $grid-rows-count * $tile-size !default;
@@ -80,9 +80,12 @@ tile {
   display: block;
   position: absolute;
 
-  height: $tile-size;
-  width: $tile-size;
+  height: $tile-size + ($tile-padding * 2);
+  width: $tile-size + ($tile-padding * 2);
   cursor: pointer;
+
+  padding: $tile-padding;
+  transition: transform 0.2s;
 
   svg {
     display: block;
@@ -99,8 +102,8 @@ tile {
       $zeroOffsetX: $x - 1;
       $zeroOffsetY: $y - 1;
 
-      $newX: ($tile-size) * ($zeroOffsetX) + ($tile-padding * $zeroOffsetX);
-      $newY: ($tile-size) * ($zeroOffsetY) + ($tile-padding * $zeroOffsetY);
+      $newX: ($tile-size + $tile-padding) * ($zeroOffsetX);
+      $newY: ($tile-size + $tile-padding) * ($zeroOffsetY);
 
       &.position-#{$zeroOffsetX}-#{$zeroOffsetY} {
         transform: translate($newX, $newY);

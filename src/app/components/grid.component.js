@@ -1,7 +1,7 @@
 'use strict';
 
 import angular from 'angular';
-import {GRID_COLUMNS_COUNT, GRID_ROWS_COUNT, LEVELS} from './../config';
+import {GRID_COLUMNS_COUNT, GRID_ROWS_COUNT, LEVELS, SWAP_ANIMATION_DURATION} from './../config';
 
 function getRandomTileType() {
     return Math.floor(Math.random() * 5);
@@ -12,7 +12,8 @@ export default {
     template: `
     <tile 
         ng-repeat="options in getTiles() track by options.id" 
-        type="{{options.type}}" 
+        type="{{options.type}}" x="{{options.x}}" y={{options.y}}
+        tile-id="options.id" on-swap="onSwap(move, x, y)"
         class="position-{{options.x}}-{{options.y}}">
     </tile>`,
     controllerAs: '$',
@@ -81,6 +82,60 @@ export default {
             }
 
             return tiles;
+        };
+
+        // Watch grid for changes
+        $scope.$watch('grid');
+
+        // Swap event fired, change tiles positions
+        $scope.onSwap = (move, x, y) => {
+            let grid = $scope.grid, pulledXY = null;
+
+            // Convert coordinates into numbers
+            x = parseInt(x, 10);
+            y = parseInt(y, 10);
+
+            // Choose pulled element
+            switch(move) {
+            case 0: // Right
+                pulledXY = (x + 1 < GRID_COLUMNS_COUNT && grid[x+1][y] !== null) ? { x: x+1, y: y } : null;
+                break;
+            case 1: // Left
+                pulledXY = (x - 1 >= 0 && grid[x-1][y] !== null) ? { x: x-1, y: y } : null;
+                break;
+            case 2: // Up
+                pulledXY = (y + 1 < GRID_ROWS_COUNT && grid[x][y+1] !== null) ? { x: x, y: y+1 } : null;
+                break;
+            case 3: // Down
+                pulledXY = (y - 1 >= 0 && grid[x][y-1] !== null) ? { x: x, y: y-1 } : null;
+                break;
+            }
+            
+            // Cancel if it's impossible move
+            if (pulledXY === null) {
+                return;
+            }
+
+            let _x = pulledXY.x, _y = pulledXY.y;
+            let pushed = grid[x][y], 
+                pulled = grid[_x][_y];
+
+            pushed.x = _x;
+            pushed.y = _y;
+
+            pulled.x = x;
+            pulled.y = y;
+
+            setTimeout(() => {
+                grid[x][y] = pulled;
+                grid[_x][_y] = pushed;
+
+                $scope.grid = angular.copy(grid);
+                $scope.$digest();
+            }, SWAP_ANIMATION_DURATION);
+
+            $scope.grid = angular.copy(grid);
+            $scope.$digest();
         };
     }]
 };

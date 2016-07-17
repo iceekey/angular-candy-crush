@@ -16,24 +16,15 @@ const SIGNS_SVG = [
     './../../images/signs/5.svg'
 ];
 
-// Helper function for triggering events
-// function trigger(el, eventName, options) {
-//     // console.log(el);
-//     let event;
-//     if (window.CustomEvent) {
-//         event = new CustomEvent(eventName, options);
-//     } else {
-//         event = document.createEvent('CustomEvent');
-//         event.initCustomEvent(eventName, true, true, options);
-//     }
-//     el.dispatchEvent(event);
-// }
-
 // Tile Component
 export default {
     template: `<ng-include src="$.svg"></ng-include>`,
     bindings: {
-        type: '@'
+        tileID: '@', // ID of the current tile
+        type: '@', // Type of the current tile
+        x: '@', // Tile x position (grird index)
+        y: '@', // Tile y position (grid index) 
+        onSwap: '&'// Swap tiles event
     },
     controllerAs: '$',
     controller: ['$scope', '$element', function($scope, $element) {
@@ -49,6 +40,17 @@ export default {
         this.moveWatcher = null;
         this.moveWatcherActive = false;
 
+        // On Swap Event emitter
+        let onSwapEvent = (move) => {
+            // Emit event manually
+            this.onSwap({
+                id: this.tileID,
+                x: this.x,
+                y: this.y,
+                move: move
+            });
+        };
+
         this.moveChecker = (data) => {
             // Just remember position if user started to drag
             if (this.moveWatcher === null) {
@@ -60,12 +62,12 @@ export default {
             let dx = data.x - this.moveWatcher.x;
             let dy = data.y - this.moveWatcher.y;
 
-            // If horisontal difference big enough
-            if (Math.abs(dx) > 5 && Math.abs(dx) / Math.abs(dy) > 5) {
+            // If horisontal difference's big enough
+            if (Math.abs(dx) > 5 && Math.abs(dx) / Math.abs(dy) > 3.5) {
                 if (dx > 0) {
-                    // right
+                    onSwapEvent(0); // RIGHT
                 } else {
-                    // left
+                    onSwapEvent(1); // LEFT
                 }
                 
                 this.moveWatcherActive = false;
@@ -73,12 +75,12 @@ export default {
                 return;
             }
 
-            // If vertical difference big enough
-            if (Math.abs(dy) > 5 && Math.abs(dy) / Math.abs(dx) > 5) {
+            // If vertical difference's big enough
+            if (Math.abs(dy) > 5 && Math.abs(dy) / Math.abs(dx) > 3.5) {
                 if (dy > 0) {
-                    // down
+                    onSwapEvent(2); // UP
                 } else {
-                    // up
+                    onSwapEvent(3); // DOWN
                 }
 
                 this.moveWatcherActive = false;
