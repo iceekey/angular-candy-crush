@@ -13,6 +13,8 @@ $grid-height: $grid-rows-count * $tile-size !default;
 $button-height: 40px !default;
 $button-font-size: 18px !default;
 
+// Typography
+
 @mixin text() {
   font-family: 'Roboto Condensed', Arial, sans-serif;
   font-size: 15px;
@@ -28,6 +30,23 @@ $button-font-size: 18px !default;
   line-height: 1;
 }
 
+// Animations
+
+@keyframes bounceOut {
+  20% {
+    transform: scale3d(.9, .9, .9);
+  }
+
+  50%, 55% {
+    opacity: 1;
+    transform: scale3d(1.1, 1.1, 1.1);
+  }
+
+  to {
+    opacity: 0;
+    transform: scale3d(.3, .3, .3);
+  }
+}
 
 *, *:before, *:after {
   box-sizing: border-box;
@@ -36,8 +55,6 @@ $button-font-size: 18px !default;
 body {
   @include text();
 }
-
-// Layout
 
 // General
 
@@ -85,7 +102,7 @@ tile {
   cursor: pointer;
 
   padding: $tile-padding;
-  transition: transform 0.2s;
+  transition: transform .2s;
 
   svg {
     display: block;
@@ -107,6 +124,13 @@ tile {
 
       &.position-#{$zeroOffsetX}-#{$zeroOffsetY} {
         transform: translate($newX, $newY);
+        
+        &.remove {
+          svg {
+            animation-name: bounceOut;
+            animation-duration: .75s;
+          }
+        }
       }
     }
   }

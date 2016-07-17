@@ -1,7 +1,9 @@
+/*globals Promise:true*/
+
 'use strict';
 
 import angular from 'angular';
-import {GRID_COLUMNS_COUNT, GRID_ROWS_COUNT, LEVELS, SWAP_ANIMATION_DURATION} from './../config';
+import {GRID_COLUMNS_COUNT, GRID_ROWS_COUNT, LEVELS, SWAP_ANIMATION_DURATION, REMOVE_ANIMATION_DURATION} from './../config';
 
 function getRandomTileType() {
     return Math.floor(Math.random() * 5);
@@ -14,7 +16,7 @@ export default {
         ng-repeat="options in getTiles() track by options.id" 
         type="{{options.type}}" x="{{options.x}}" y={{options.y}}
         tile-id="options.id" on-swap="onSwap(move, x, y)"
-        class="position-{{options.x}}-{{options.y}}">
+        class="position-{{options.x}}-{{options.y}} {{options.removed === true ? 'remove' : ''}}">
     </tile>`,
     controllerAs: '$',
     controller: ['$scope', function($scope) {
@@ -66,7 +68,8 @@ export default {
                         id: index++,
                         type: tileType,
                         x: i,
-                        y: j
+                        y: j,
+                        removed: false
                     };
                 }
             }
@@ -160,7 +163,6 @@ export default {
                 }
             }
 
-
             return false;
         };
 
@@ -223,6 +225,37 @@ export default {
             return set;
         };
 
+        // Remove tiles from grid
+        let removeTiles = (matches) => {
+            let grid = $scope.grid;
+            return new Promise((removed) => {
+                for (let i = 0; i < matches.length; i++) {
+                    // Perform animations
+                    for (let j = 0; j < matches[i].length; j++) {
+                        let tile = matches[i][j];
+                        grid[tile.x][tile.y].removed = true;
+
+                        setTimeout(() => {
+                            for (let i = 0; i < matches.length; i++) {
+                                // Actually remove items
+                                for (let j = 0; j < matches[i].length; j++) {
+                                    tile = matches[i][j];
+                                    grid[tile.x][tile.y] = null;
+                                }
+                            }
+
+                            $scope.grid = angular.copy(grid);
+                            $scope.$digest();
+                            removed();
+                        }, REMOVE_ANIMATION_DURATION);
+                    }
+                }
+                
+                $scope.grid = angular.copy(grid);
+                $scope.$digest(); 
+            });
+        };
+
         // Get current filled grid as a one-dimensional array
         $scope.getTiles = () => {
             let grid = $scope.grid;
@@ -276,8 +309,7 @@ export default {
             }
 
             let _x = pulledXY.x, _y = pulledXY.y;
-            let pushed = grid[x][y], 
-                pulled = grid[_x][_y];
+            let pushed = grid[x][y], pulled = grid[_x][_y];
 
             pushed.x = _x;
             pushed.y = _y;
@@ -295,21 +327,20 @@ export default {
 
                     $scope.grid = angular.copy(grid);
                     
-                    // Detect element we need to blow
+                    // Detect elements to remove
                     let matches = [...detectVerticalMatches(), ...detectHorizontalMatches()];
                     if (matches.length > 0) {
-                        // Blow them
-                        for (let i = 0; i < matches.length; i++) {
-                            let tiles = matches[i];
-                            for (let j = 0; j < tiles.length; j++) {
-                                grid[tiles[j].x][tiles[j].y] = null;
-                            }
-                        }
+                        // Remove them
+                        removeTiles(matches).then(() => {
+                            
+                            detectPossibleSwaps();
+                        });
 
-                        $scope.grid = angular.copy(grid);
+                    // Nothing to remove, just pass
+                    } else {
+                        detectPossibleSwaps();
+                        $scope.$digest();
                     }
-
-                    detectPossibleSwaps();
                     // if ([...verticalMatches, ...horizontalMatches].length)
                 // Or decline changes
                 } else {
@@ -318,14 +349,15 @@ export default {
 
                     pulled.x = _x;
                     pulled.y = _y;
+                    
                     $scope.grid = angular.copy(grid);
+                    $scope.$digest();                
                 }
 
-                $scope.$digest();
             }, SWAP_ANIMATION_DURATION);
 
             $scope.grid = angular.copy(grid);
-            $scope.$digest();
+            $scope.$digest();  
         };
     }]
 };
