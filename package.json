@@ -18,6 +18,7 @@
   "homepage": "https://github.com/iceekey/angular-three-in-a-row#readme",
   "devDependencies": {
     "angular": "^1.5.7",
+    "angular-touch": "^1.5.7",
     "autoprefixer": "^6.3.7",
     "babel-core": "^6.10.4",
     "babel-loader": "^6.2.4",
