@@ -63,7 +63,7 @@ export default {
             let dy = data.y - this.moveWatcher.y;
 
             // If horisontal difference's big enough
-            if (Math.abs(dx) > 5 && Math.abs(dx) / Math.abs(dy) > 3.5) {
+            if (Math.abs(dx) > 5 && Math.abs(dx) / Math.abs(dy) > 2) {
                 if (dx > 0) {
                     onSwapEvent(0); // RIGHT
                 } else {
@@ -76,7 +76,7 @@ export default {
             }
 
             // If vertical difference's big enough
-            if (Math.abs(dy) > 5 && Math.abs(dy) / Math.abs(dx) > 3.5) {
+            if (Math.abs(dy) > 5 && Math.abs(dy) / Math.abs(dx) > 2) {
                 if (dy > 0) {
                     onSwapEvent(2); // UP
                 } else {

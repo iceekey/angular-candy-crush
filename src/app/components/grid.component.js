@@ -175,8 +175,8 @@ export default {
                     if (grid[i][j] !== null) {
                         let matchType = grid[i][j].type;
 
-                        if (grid[i + 1][j] !== null && grid[i + 1][j].type == matchType
-                        && grid[i + 2][j] !== null && grid[i + 2][j].type == matchType) {
+                        if (grid[i + 1][j] !== null && grid[i + 1][j].type == matchType &&
+                            grid[i + 2][j] !== null && grid[i + 2][j].type == matchType) {
                     
                             let chain = [];
                             do {
@@ -204,8 +204,8 @@ export default {
                     if (grid[i][j] !== null) {
                         let matchType = grid[i][j].type;
 
-                        if (grid[i][j + 1] !== null && grid[i][j + 1].type == matchType
-                        && grid[i][j + 2] !== null && grid[i][j + 2].type == matchType) {
+                        if (grid[i][j + 1] !== null && grid[i][j + 1].type == matchType &&
+                            grid[i][j + 2] !== null && grid[i][j + 2].type == matchType) {
                     
                             let chain = [];
                             do {

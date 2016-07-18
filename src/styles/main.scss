@@ -1,6 +1,9 @@
 @import '~reset-css/_reset.scss';
 @import 'fonts';
 
+$remove-animation-duration: .55s !default;
+$swap-animation-duration: .25s !default; 
+
 $grid-columns-count: 9 !default;
 $grid-rows-count: 9 !default;
 
@@ -102,7 +105,7 @@ tile {
   cursor: pointer;
 
   padding: $tile-padding;
-  transition: transform .2s;
+  transition: transform $swap-animation-duration ease-out;
 
   svg {
     display: block;
@@ -128,7 +131,7 @@ tile {
         &.remove {
           svg {
             animation-name: bounceOut;
-            animation-duration: .75s;
+            animation-duration: $remove-animation-duration;
           }
         }
       }
