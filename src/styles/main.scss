@@ -105,7 +105,7 @@ tile {
   cursor: pointer;
 
   padding: $tile-padding;
-  transition: transform $swap-animation-duration ease-out;
+  transition: transform $swap-animation-duration ease-out, opacity $swap-animation-duration * 1.75 ease-in;
 
   svg {
     display: block;
@@ -134,8 +134,12 @@ tile {
 
       &.position-#{$zeroOffsetX}-#{$zeroOffsetY} {
         transform: translate($newX, $newY);
+        opacity: 1;
         
-        &.newbie { transform: translate($newX, -($grid-height - $newY)); }
+        &.newbie { 
+          transform: translate($newX, -($grid-height - $newY)); 
+          opacity: 0;
+        }
       }
     }
   }

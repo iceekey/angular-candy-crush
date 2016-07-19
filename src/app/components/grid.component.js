@@ -35,12 +35,19 @@ export default {
         };
 
         // Generate tiles global index
-        let index = 0;
+        $scope.index = 0;
+        $scope.playgroundLocked = false;
 
         // Create tiles
-        $scope.$parent.createTiles = () => {
-            let grid = $scope.grid, tileType;
+        let createTiles = () => {
+            $scope.playgroundLocked = true;
+
+            let grid = $scope.grid, tileType, firstTime = false;
             let level = $scope.level;
+
+            if (grid.length <= 0) {
+                firstTime = true;
+            }
 
             if (!level.hasOwnProperty('tiles') || !angular.isArray(level.tiles)) {
                 throw new Error(`Level configuration's damaged`);
@@ -72,18 +79,66 @@ export default {
                     
                     // Put tile into grid
                     grid[i][j] = {
-                        id: index++,
+                        id: $scope.index++,
                         type: tileType,
                         x: i,
                         y: j,
-                        removed: false
+                        removed: false,
+                        newbie: true
                     };
                 }
+            }
+            
+            // Perform 'show' animation
+            setTimeout(() => {
+                for(let i = 0; i < GRID_COLUMNS_COUNT; i++) {
+                    for(let j = 0; j < GRID_ROWS_COUNT; j++) {
+                        if (grid[i][j] !== null) {
+                            grid[i][j].newbie = false;
+                        }
+                    }
+                }
+
+                $scope.grid = angular.copy(grid);
+                $scope.$digest();
+
+                $scope.playgroundLocked = false;
+            }, 0);
+
+            $scope.grid = angular.copy(grid);
+            
+            if (!firstTime) {
+                $scope.$digest();
             }
 
             // Detect all possible swaps
             detectPossibleSwaps();
         };
+        $scope.$parent.createTiles = createTiles;
+
+        let resetGrid = () => {
+            $scope.playgroundLocked = true;
+            let grid = $scope.grid, changedGrid = angular.copy(grid);
+            for(let i = 0; i < GRID_COLUMNS_COUNT; i++) {
+                for(let j = 0; j < GRID_ROWS_COUNT; j++) {
+                    if (grid[i][j] !== null) {
+                        grid[i][j].removed = true;
+                        changedGrid[i][j] = null;
+                    }
+                }
+            }
+
+            // Remove items after animation ends
+            setTimeout(() => {
+                $scope.grid = changedGrid;
+                $scope.$digest();
+                // Create tiles again
+                createTiles();
+            }, REMOVE_ANIMATION_DURATION);
+
+            $scope.grid = angular.copy(grid);
+        };
+        $scope.$parent.resetGrid = resetGrid;
 
         // Helper function to detect swaps
         let hasChainAtColumn = (grid, column, row) => {
@@ -354,7 +409,7 @@ export default {
                         
                         // Put tile into grid
                         grid[i][j] = {
-                            id: index++,
+                            id: $scope.index++,
                             type: tileType,
                             x: i,
                             y: j,
@@ -384,6 +439,35 @@ export default {
             });
         };
 
+        let startMatchDetectingCycle = () => {
+            // Detect elements to remove
+            let matches = [...detectVerticalMatches(), ...detectHorizontalMatches()];
+            if (matches.length > 0) {
+                // Remove them
+                removeTiles(matches).then(() => {
+                    // Shift tiles to fill holes down
+                    shiftTiles().then(changedGrid => {
+                        // Fill holes up
+                        fillHoles(changedGrid).then(() => {
+                            startMatchDetectingCycle();                        
+                        });
+                    });
+                });
+
+            // Nothing to remove, just pass
+            } else {
+                detectPossibleSwaps();
+                // Reset grid if there's no more swaps
+                if ($scope.possibleSwaps.length <= 0) {
+                    resetGrid();
+                } else {
+                    $scope.$digest();
+                    // Enable playground
+                    $scope.playgroundLocked = false;
+                }
+            }
+        };
+
         // Get current filled grid as a one-dimensional array
         $scope.getTiles = () => {
             let grid = $scope.grid;
@@ -409,6 +493,14 @@ export default {
 
         // Swap event fired, change tiles positions
         $scope.onSwap = (move, x, y) => {
+            // Whoops! Last cycle not finished yet
+            if ($scope.playgroundLocked === true) {
+                return;
+            }
+
+            // Lock playground
+            $scope.playgroundLocked = true;
+
             let grid = $scope.grid, pulledXY = null;
 
             // Convert coordinates into numbers
@@ -455,26 +547,8 @@ export default {
 
                     $scope.grid = angular.copy(grid);
                     
-                    // Detect elements to remove
-                    let matches = [...detectVerticalMatches(), ...detectHorizontalMatches()];
-                    if (matches.length > 0) {
-                        // Remove them
-                        removeTiles(matches).then(() => {
-                            // Shift tiles to fill holes down
-                            shiftTiles().then(changedGrid => {
-                                // Fill holes up
-                                fillHoles(changedGrid).then(() => {
-                                    detectPossibleSwaps();
-                                });
-                            });
-                        });
-
-                    // Nothing to remove, just pass
-                    } else {
-                        detectPossibleSwaps();
-                        $scope.$digest();
-                    }
-                    // if ([...verticalMatches, ...horizontalMatches].length)
+                    // Detect matches and remove them
+                    startMatchDetectingCycle();
                 // Or decline changes
                 } else {
                     pushed.x = x;
@@ -484,7 +558,10 @@ export default {
                     pulled.y = _y;
                     
                     $scope.grid = angular.copy(grid);
-                    $scope.$digest();                
+                    $scope.$digest();
+
+                    // Enable playground
+                    $scope.playgroundLocked = false;           
                 }
 
             }, SWAP_ANIMATION_DURATION);
