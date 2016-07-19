@@ -27,7 +27,7 @@ export default {
         class="position-{{t.x}}-{{t.y}}" ng-class="getTileClass(t)">
     </tile>
     
-    <span ng-repeat="s in scoreBanners track by s.id" class="score" ng-class="getScoreBannerClass(s)">{{s.value}}</span>
+    <span ng-repeat="s in getScoreBanners() track by s.id" class="score" ng-class="getScoreBannerClass(s)">{{s.value}}</span>
     `,
     bindings: { onScoreIncreased: '&' /* Score have been increaced */ },
     controllerAs: '$',
@@ -47,10 +47,7 @@ export default {
         };
 
         $scope.getScoreBannerClass = (s) => {
-            let scoreClass = ''; 
-            scoreClass += `position-${s.x}-${s.y}`;
-            scoreClass += s.removed === true ? ' removed' : '';
-            return scoreClass;
+            return `position-${s.x}-${s.y}`;
         };
 
         // Generate tiles global index
@@ -479,21 +476,27 @@ export default {
             // Detect elements to remove
             let matches = [...detectVerticalMatches(), ...detectHorizontalMatches()];
             if (matches.length > 0) {
+                let iterationScoreBanners = [];
 
                 // Increase score
                 for (let i = 0; i < matches.length; i++) {
+                    // Default cost
                     let score = CHAIN_REMOVE_COST;
+                    // Add chain length bonus
                     score += (matches[i].length - 3) * CHAIN_LENGTH_BONUS;
+                    // Multiply to X Bonus
                     score = score * ($scope.xBonus + 1);
 
                     let matchLengthMid = Math.floor(matches[i].length / 2);
+                    let scoreBannerID = $scope.scoreIndex++;
                     $scope.scoreBanners.push({
-                        id: $scope.scoreIndex++,
+                        id: scoreBannerID,
                         value: score,
                         x: matches[i][matchLengthMid].x,
                         y: matches[i][matchLengthMid].y,
                     });
-                    
+                    // Push index 
+                    iterationScoreBanners.push(scoreBannerID);
                     this.onScoreIncreased({ value: score });
                 }
 
@@ -501,13 +504,12 @@ export default {
                 setTimeout(() => {
                     // Remove not used score banners
                     for (let i = 0; i < $scope.scoreBanners.length; i++) {
-                        if ($scope.scoreBanners[i].removed === true) {
-                            $scope.scoreBanners.splice(i, 1);
+                        let bannersIDs = iterationScoreBanners;
+                        for (let j = 0; j < bannersIDs.length; j++) {
+                            if ($scope.scoreBanners[i] !== null && bannersIDs[j] === $scope.scoreBanners[i].id) {
+                                $scope.scoreBanners[i] = null;
+                            }
                         }
-                    }
-
-                    for (let i = 0; i < $scope.scoreBanners.length; i++) {
-                        $scope.scoreBanners[i].removed = true;
                     }
                     $scope.$digest();
                 }, SCORE_ANIMATION_DURATION);
@@ -560,6 +562,17 @@ export default {
             }
 
             return tiles;
+        };
+
+        $scope.getScoreBanners = () => {
+            let banners = [];
+            for (let i = 0; i < $scope.scoreBanners.length; i++) {
+                if ($scope.scoreBanners[i] !== null) {
+                    banners.push($scope.scoreBanners[i]);
+                }
+            }
+
+            return banners;
         };
 
         // Watch grid for changes

@@ -17,5 +17,5 @@ export const SCORE_ANIMATION_DURATION = 900;
 
 export const LEVELS = [angular.fromJson(Level0)];
 
-export const CHAIN_REMOVE_COST = 1000;
-export const CHAIN_LENGTH_BONUS = 300;
+export const CHAIN_REMOVE_COST = 10000;
+export const CHAIN_LENGTH_BONUS = 4000;

@@ -127,14 +127,11 @@ body {
       }
 
       &.position-#{$zeroOffsetX}-#{$zeroOffsetY} {
-        transition: .2s linear;
         transform: translate($newX, $newY);
         opacity: 1;
         
         animation-name: scoreAnimation-#{$x}-#{$y};
         animation-duration: $score-animation-duration;
-
-        &.removed { opacity: 0; }
       }
     }
   }
