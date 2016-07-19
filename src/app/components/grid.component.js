@@ -13,10 +13,10 @@ function getRandomTileType() {
 export default {
     template: `
     <tile 
-        ng-repeat="options in getTiles() track by options.id" 
-        type="{{options.type}}" x="{{options.x}}" y={{options.y}}
-        tile-id="options.id" on-swap="onSwap(move, x, y)"
-        class="position-{{options.x}}-{{options.y}} {{options.removed === true ? 'remove' : ''}}">
+        ng-repeat="t in getTiles() track by t.id" 
+        type="{{t.type}}" x="{{t.x}}" y={{t.y}}
+        tile-id="t.id" newbie="" on-swap="onSwap(move, x, y)"
+        class="position-{{t.x}}-{{t.y}}" ng-class="getTileClass(t)">
     </tile>`,
     controllerAs: '$',
     controller: ['$scope', function($scope) {
@@ -24,15 +24,21 @@ export default {
         $scope.grid = [];
         // Possible swaps for the current filled grid
         $scope.possibleSwaps = [];
-
         $scope.level = LEVELS[0];
 
+        $scope.getTileClass = (t) => {
+            let tileClass = ''; 
+            tileClass +=  t.removed === true ? ' remove' : '';
+            tileClass +=  t.newbie === true ? ' newbie' : '';
+            return tileClass;
+        };
+
         // Generate tiles
-        let index = 0, tileType;
+        let index = 0;
 
         // Create tiles
         $scope.$parent.createTiles = () => {
-            let grid = $scope.grid;
+            let grid = $scope.grid, tileType;
             let level = $scope.level;
 
             if (!level.hasOwnProperty('tiles') || !angular.isArray(level.tiles)) {
@@ -227,33 +233,140 @@ export default {
 
         // Remove tiles from grid
         let removeTiles = (matches) => {
-            let grid = $scope.grid;
-            return new Promise((removed) => {
+            let grid = $scope.grid, changedGrid = angular.copy(grid);
+            return new Promise(removed => {
                 for (let i = 0; i < matches.length; i++) {
                     // Perform animations
                     for (let j = 0; j < matches[i].length; j++) {
-                        let tile = matches[i][j];
-                        grid[tile.x][tile.y].removed = true;
+                        let tile = matches[i][j], x = tile.x, y = tile.y;
 
-                        setTimeout(() => {
-                            for (let i = 0; i < matches.length; i++) {
-                                // Actually remove items
-                                for (let j = 0; j < matches[i].length; j++) {
-                                    tile = matches[i][j];
-                                    grid[tile.x][tile.y] = null;
-                                }
-                            }
-
-                            $scope.grid = angular.copy(grid);
-                            $scope.$digest();
-                            removed();
-                        }, REMOVE_ANIMATION_DURATION);
+                        grid[x][y].removed = true;
+                        // Actually remove items
+                        changedGrid[x][y] = null;
                     }
                 }
-                
+
+                // Remove items after animation ends
+                setTimeout(() => {
+                    $scope.grid = changedGrid;
+                    $scope.$digest();
+                    removed();
+                }, REMOVE_ANIMATION_DURATION);
+
                 $scope.grid = angular.copy(grid);
                 $scope.$digest(); 
             });
+        };
+
+        // Helper function to shiftExistingTiles
+        let findTileAbove = (column, row, shouldSkip) => {
+            let skipped = 0;
+            if ($scope.grid[column][row] !== null) {
+                if (skipped >= shouldSkip) {
+                    return $scope.grid[column][row];
+                }
+
+                skipped++;
+            }
+
+            for (let j = row - 1; j >= 0; j--) {
+                if ($scope.grid[column][j] !== null) {
+                    if (skipped >= shouldSkip) {
+                        return $scope.grid[column][j];
+                    }
+
+                    skipped++;
+                }
+            }
+
+            return false;
+        };
+
+        let shiftExistingTiles = () => {
+            return new Promise(shifted => {
+                let tileAbove, grid = $scope.grid, changedGrid = angular.copy(grid), level = $scope.level.tiles;
+
+                for (let i = 0; i < GRID_COLUMNS_COUNT; i++) {
+                    let row = GRID_ROWS_COUNT - 1, skipped = 0;
+
+                    while (row > 0 && level[i][row] === 0) {
+                        row--;
+                    }
+
+                    while (row >= 0 && (tileAbove = findTileAbove(i, row, skipped)) !== false) {
+
+                        // Perform animations
+                        // console.log(i, row, tileAbove, skipped);
+                        let x = tileAbove.x, y = tileAbove.y;
+                        grid[x][y].x = i;
+                        grid[x][y].y = row;
+
+                        // Add skip if it was removed element
+                        if (grid[i][row] === null) {
+                            skipped++;
+                        }
+
+                        if (row !== y) {
+                            changedGrid[i][row] = grid[x][y];
+                            changedGrid[x][y] = null;
+                        }
+
+                        while (row > 0 && level[i][row - 1] === 0) {
+                            row--;
+                        }
+
+                        row--;
+                    }
+                }
+
+                // Actually move items
+                setTimeout(() => {
+                    $scope.grid = changedGrid;
+                    $scope.$digest();
+                    shifted(); 
+                }, SWAP_ANIMATION_DURATION);
+
+                $scope.grid = angular.copy(grid);
+                $scope.$digest();
+            });
+        };
+
+        let fillHoles = () => {
+            let grid = $scope.grid, tileType;
+            let level = $scope.level;
+
+            for(let i = 0; i < GRID_COLUMNS_COUNT; i++) {
+                for(let j = 0; j < GRID_ROWS_COUNT; j++) {
+                    // Check if we have tile from level configuration or tile already exists
+                    if (level.tiles[i][j] === 0 || grid[i][j] !== null) {
+                        continue;
+                    }
+
+                    // Don't repeat tiles three or more times
+                    do {
+                        tileType = getRandomTileType();
+                    }
+                    while ((i >= 2 && 
+                        (grid[i - 1][j] !== null && grid[i - 1][j].type === tileType) &&
+                        (grid[i - 2][j] !== null && grid[i - 2][j].type === tileType))
+                    || (j >= 2 &&
+                        (grid[i][j - 1] !== null && grid[i][j - 1].type === tileType) &&
+                        (grid[i][j - 2] !== null && grid[i][j - 2].type === tileType))); 
+                    
+                    // Put tile into grid
+                    grid[i][j] = {
+                        id: index++,
+                        type: tileType,
+                        x: i,
+                        y: j,
+                        removed: false,
+                        newbie: true
+                    };
+                }
+            }
+
+            $scope.grid = angular.copy(grid);
+            $scope.$digest();
         };
 
         // Get current filled grid as a one-dimensional array
@@ -332,8 +445,10 @@ export default {
                     if (matches.length > 0) {
                         // Remove them
                         removeTiles(matches).then(() => {
-                            
-                            detectPossibleSwaps();
+                            shiftExistingTiles().then(() => {
+                                fillHoles();
+                                detectPossibleSwaps();
+                            });
                         });
 
                     // Nothing to remove, just pass

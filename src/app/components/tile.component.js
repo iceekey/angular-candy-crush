@@ -23,7 +23,7 @@ export default {
         tileID: '@', // ID of the current tile
         type: '@', // Type of the current tile
         x: '@', // Tile x position (grird index)
-        y: '@', // Tile y position (grid index) 
+        y: '@', // Tile y position (grid index)
         onSwap: '&'// Swap tiles event
     },
     controllerAs: '$',
