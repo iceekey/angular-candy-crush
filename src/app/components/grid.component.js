@@ -3,7 +3,15 @@
 'use strict';
 
 import angular from 'angular';
-import {GRID_COLUMNS_COUNT, GRID_ROWS_COUNT, LEVELS, SWAP_ANIMATION_DURATION, REMOVE_ANIMATION_DURATION} from './../config';
+import {
+    GRID_COLUMNS_COUNT, 
+    GRID_ROWS_COUNT, 
+    SWAP_ANIMATION_DURATION, 
+    REMOVE_ANIMATION_DURATION,
+    SCORE_ANIMATION_DURATION,
+    CHAIN_REMOVE_COST,
+    CHAIN_LENGTH_BONUS
+} from './../config';
 
 function getRandomTileType() {
     return Math.floor(Math.random() * 5);
@@ -17,16 +25,20 @@ export default {
         type="{{t.type}}" x="{{t.x}}" y={{t.y}}
         tile-id="t.id" newbie="" on-swap="onSwap(move, x, y)"
         class="position-{{t.x}}-{{t.y}}" ng-class="getTileClass(t)">
-    </tile>`,
+    </tile>
+    
+    <span ng-repeat="s in scoreBanners track by s.id" class="score" ng-class="getScoreBannerClass(s)">{{s.value}}</span>
+    `,
+    bindings: { onScoreIncreased: '&' /* Score have been increaced */ },
     controllerAs: '$',
     controller: ['$scope', function($scope) {
         // Game grid
         $scope.grid = [];
         // Possible swaps for the current filled grid
         $scope.possibleSwaps = [];
-        $scope.level = LEVELS[0];
+        $scope.level = null;
 
-        // View helper method
+        // View helper methods
         $scope.getTileClass = (t) => {
             let tileClass = ''; 
             tileClass +=  t.removed === true ? ' remove' : '';
@@ -34,9 +46,31 @@ export default {
             return tileClass;
         };
 
+        $scope.getScoreBannerClass = (s) => {
+            let scoreClass = ''; 
+            scoreClass += `position-${s.x}-${s.y}`;
+            scoreClass += s.removed === true ? ' removed' : '';
+            return scoreClass;
+        };
+
         // Generate tiles global index
         $scope.index = 0;
+        $scope.scoreIndex = 0;
         $scope.playgroundLocked = false;
+
+        // Score variables
+        $scope.xBonus = 0; 
+        $scope.scoreBanners = [];
+
+        $scope.$parent.generateLevel = (level) => {
+            if ($scope.level !== null) {
+                resetGrid();
+                return;
+            }
+
+            $scope.level = level;
+            createTiles();
+        };
 
         // Create tiles
         let createTiles = () => {
@@ -103,6 +137,13 @@ export default {
                 $scope.$digest();
 
                 $scope.playgroundLocked = false;
+
+                // Detect all possible swaps
+                detectPossibleSwaps();
+
+                if ($scope.possibleSwaps.length <= 0) {
+                    resetGrid();
+                }
             }, 0);
 
             $scope.grid = angular.copy(grid);
@@ -110,11 +151,7 @@ export default {
             if (!firstTime) {
                 $scope.$digest();
             }
-
-            // Detect all possible swaps
-            detectPossibleSwaps();
         };
-        $scope.$parent.createTiles = createTiles;
 
         let resetGrid = () => {
             $scope.playgroundLocked = true;
@@ -138,7 +175,6 @@ export default {
 
             $scope.grid = angular.copy(grid);
         };
-        $scope.$parent.resetGrid = resetGrid;
 
         // Helper function to detect swaps
         let hasChainAtColumn = (grid, column, row) => {
@@ -443,12 +479,47 @@ export default {
             // Detect elements to remove
             let matches = [...detectVerticalMatches(), ...detectHorizontalMatches()];
             if (matches.length > 0) {
+
+                // Increase score
+                for (let i = 0; i < matches.length; i++) {
+                    let score = CHAIN_REMOVE_COST;
+                    score += (matches[i].length - 3) * CHAIN_LENGTH_BONUS;
+                    score = score * ($scope.xBonus + 1);
+
+                    let matchLengthMid = Math.floor(matches[i].length / 2);
+                    $scope.scoreBanners.push({
+                        id: $scope.scoreIndex++,
+                        value: score,
+                        x: matches[i][matchLengthMid].x,
+                        y: matches[i][matchLengthMid].y,
+                    });
+                    
+                    this.onScoreIncreased({ value: score });
+                }
+
+                // Remove animation
+                setTimeout(() => {
+                    // Remove not used score banners
+                    for (let i = 0; i < $scope.scoreBanners.length; i++) {
+                        if ($scope.scoreBanners[i].removed === true) {
+                            $scope.scoreBanners.splice(i, 1);
+                        }
+                    }
+
+                    for (let i = 0; i < $scope.scoreBanners.length; i++) {
+                        $scope.scoreBanners[i].removed = true;
+                    }
+                    $scope.$digest();
+                }, SCORE_ANIMATION_DURATION);
+
                 // Remove them
                 removeTiles(matches).then(() => {
                     // Shift tiles to fill holes down
                     shiftTiles().then(changedGrid => {
                         // Fill holes up
                         fillHoles(changedGrid).then(() => {
+                            // Increase X Bonus each cycle
+                            $scope.xBonus += 0.5;
                             startMatchDetectingCycle();                        
                         });
                     });
@@ -456,6 +527,9 @@ export default {
 
             // Nothing to remove, just pass
             } else {
+                // Reset X Bonus
+                $scope.xBonus = 0;
+                
                 detectPossibleSwaps();
                 // Reset grid if there's no more swaps
                 if ($scope.possibleSwaps.length <= 0) {
@@ -490,6 +564,7 @@ export default {
 
         // Watch grid for changes
         $scope.$watch('grid');
+        $scope.$watch('scoreBanners');
 
         // Swap event fired, change tiles positions
         $scope.onSwap = (move, x, y) => {

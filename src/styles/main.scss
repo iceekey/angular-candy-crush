@@ -3,18 +3,21 @@
 
 $remove-animation-duration: .55s !default;
 $swap-animation-duration: .25s !default; 
+$score-animation-duration: .95s !default;
 
 $grid-columns-count: 9 !default;
 $grid-rows-count: 9 !default;
 
 $tile-padding: 10px !default;
-$tile-size: 45px !default;
+$tile-size: 40px !default;
 
-$grid-width: $grid-columns-count * $tile-size !default;
-$grid-height: $grid-rows-count * $tile-size !default;
+$grid-width: $grid-columns-count * ($tile-size + $tile-padding) + $tile-padding  !default;
+$grid-height: $grid-rows-count * ($tile-size + $tile-padding) + $tile-padding !default;
 
 $button-height: 40px !default;
 $button-font-size: 18px !default;
+
+$score-font-size: 24px !default;
 
 // Typography
 
@@ -22,6 +25,15 @@ $button-font-size: 18px !default;
   font-family: 'Roboto Condensed', Arial, sans-serif;
   font-size: 15px;
   font-weight: 300;
+}
+
+@mixin score-text() {
+  @include text();
+
+  font-size: $score-font-size;
+  font-weight: 700;
+
+  line-height: 1;
 }
 
 @mixin button-text() {
@@ -84,6 +96,50 @@ body {
   height: 38px;
 }
 
+// Game elements
+
+.score {
+  @include score-text;
+  
+  display: inline-block; 
+  position: absolute;
+
+  color: #690;
+  text-shadow: 0 1px 1px #d3d3d3;
+
+  @for $x from 1 through $grid-columns-count {
+    @for $y from 1 through $grid-rows-count {
+      $zeroOffsetX: $x - 1;
+      $zeroOffsetY: $y - 1;
+
+      $newX: ($tile-size + $tile-padding) * $zeroOffsetX;
+      $newY: ($tile-size + $tile-padding) * $zeroOffsetY + ($tile-size - $score-font-size) / 2;
+
+      @keyframes scoreAnimation-#{$x}-#{$y} {
+        0% { transform: translate($newX, $newY); }
+        
+        50%, 65% { opacity: 1; }
+
+        to {
+          opacity: 0;
+          transform: translate($newX, $newY - 25px);
+        }
+      }
+
+      &.position-#{$zeroOffsetX}-#{$zeroOffsetY} {
+        transition: .2s linear;
+        transform: translate($newX, $newY);
+        opacity: 1;
+        
+        animation-name: scoreAnimation-#{$x}-#{$y};
+        animation-duration: $score-animation-duration;
+
+        &.removed { opacity: 0; }
+      }
+    }
+  }
+}
+
 // Components
 
 grid {
@@ -129,8 +185,8 @@ tile {
       $zeroOffsetX: $x - 1;
       $zeroOffsetY: $y - 1;
 
-      $newX: ($tile-size + $tile-padding) * ($zeroOffsetX);
-      $newY: ($tile-size + $tile-padding) * ($zeroOffsetY);
+      $newX: ($tile-size + $tile-padding) * $zeroOffsetX;
+      $newY: ($tile-size + $tile-padding) * $zeroOffsetY;
 
       &.position-#{$zeroOffsetX}-#{$zeroOffsetY} {
         transform: translate($newX, $newY);

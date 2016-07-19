@@ -7,9 +7,18 @@
 </head>
 <body>
     <div class="game-wrapper" ng-app="app" ng-controller="GameController">
-        <div class="button" ng-click="startGame()">Start game</div>
-        <div class="button" ng-click="resetGrid()">Reset Grid</div>
-        <grid></grid>
+        <div class="button" ng-click="startGame()">
+            <span ng-show="!gameStarted">Start Game</span>
+            <span ng-show="gameStarted">End Game</span>
+        </div>
+        <div class="button" ng-if="gameStarted" ng-click="startLevel(level)">
+            <span ng-show="!levelStarted">Start Level</span>
+            <span ng-show="levelStarted">Restart Level</span>
+        </div>
+
+        <span ng-if="levelStarted">Счет: {{score}}</span>
+        <span ng-if="gameStarted">Общий счет: {{totalScore}}</span>
+        <grid on-score-increased="increaseScore(value)"></grid>
     </div>
 </body>
 </html>
