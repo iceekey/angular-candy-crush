@@ -117,6 +117,13 @@ tile {
     max-width: $tile-size;
   }
 
+  &.remove {
+    svg {
+      animation-name: bounceOut;
+      animation-duration: $remove-animation-duration;
+    }
+  }
+
   @for $x from 1 through $grid-columns-count {
     @for $y from 1 through $grid-rows-count {
       $zeroOffsetX: $x - 1;
@@ -128,12 +135,7 @@ tile {
       &.position-#{$zeroOffsetX}-#{$zeroOffsetY} {
         transform: translate($newX, $newY);
         
-        &.remove {
-          svg {
-            animation-name: bounceOut;
-            animation-duration: $remove-animation-duration;
-          }
-        }
+        &.newbie { transform: translate($newX, -($grid-height - $newY)); }
       }
     }
   }

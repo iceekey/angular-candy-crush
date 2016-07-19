@@ -26,6 +26,7 @@ export default {
         $scope.possibleSwaps = [];
         $scope.level = LEVELS[0];
 
+        // View helper method
         $scope.getTileClass = (t) => {
             let tileClass = ''; 
             tileClass +=  t.removed === true ? ' remove' : '';
@@ -33,7 +34,7 @@ export default {
             return tileClass;
         };
 
-        // Generate tiles
+        // Generate tiles global index
         let index = 0;
 
         // Create tiles
@@ -282,7 +283,8 @@ export default {
             return false;
         };
 
-        let shiftExistingTiles = () => {
+        // Shift tiles down to fill holes after removing
+        let shiftTiles = () => {
             return new Promise(shifted => {
                 let tileAbove, grid = $scope.grid, changedGrid = angular.copy(grid), level = $scope.level.tiles;
 
@@ -320,53 +322,66 @@ export default {
                 }
 
                 // Actually move items
-                setTimeout(() => {
-                    $scope.grid = changedGrid;
-                    $scope.$digest();
-                    shifted(); 
-                }, SWAP_ANIMATION_DURATION);
+                shifted(changedGrid); 
 
                 $scope.grid = angular.copy(grid);
                 $scope.$digest();
             });
         };
 
-        let fillHoles = () => {
-            let grid = $scope.grid, tileType;
-            let level = $scope.level;
+        let fillHoles = (grid) => {
+            return new Promise(filled => {
+                let changesMap = [], tileType;
+                let level = $scope.level;
 
-            for(let i = 0; i < GRID_COLUMNS_COUNT; i++) {
-                for(let j = 0; j < GRID_ROWS_COUNT; j++) {
-                    // Check if we have tile from level configuration or tile already exists
-                    if (level.tiles[i][j] === 0 || grid[i][j] !== null) {
-                        continue;
-                    }
+                for(let i = 0; i < GRID_COLUMNS_COUNT; i++) {
+                    for(let j = 0; j < GRID_ROWS_COUNT; j++) {
+                        // Check if we have tile from level configuration or tile already exists
+                        if (level.tiles[i][j] === 0 || grid[i][j] !== null) {
+                            continue;
+                        }
 
-                    // Don't repeat tiles three or more times
-                    do {
-                        tileType = getRandomTileType();
+                        // Don't repeat tiles three or more times
+                        do {
+                            tileType = getRandomTileType();
+                        }
+                        while ((i >= 2 && 
+                            (grid[i - 1][j] !== null && grid[i - 1][j].type === tileType) &&
+                            (grid[i - 2][j] !== null && grid[i - 2][j].type === tileType))
+                        || (j >= 2 &&
+                            (grid[i][j - 1] !== null && grid[i][j - 1].type === tileType) &&
+                            (grid[i][j - 2] !== null && grid[i][j - 2].type === tileType))); 
+                        
+                        // Put tile into grid
+                        grid[i][j] = {
+                            id: index++,
+                            type: tileType,
+                            x: i,
+                            y: j,
+                            removed: false,
+                            newbie: true
+                        };
+
+                        changesMap.push({ x: i, y: j });
                     }
-                    while ((i >= 2 && 
-                        (grid[i - 1][j] !== null && grid[i - 1][j].type === tileType) &&
-                        (grid[i - 2][j] !== null && grid[i - 2][j].type === tileType))
-                    || (j >= 2 &&
-                        (grid[i][j - 1] !== null && grid[i][j - 1].type === tileType) &&
-                        (grid[i][j - 2] !== null && grid[i][j - 2].type === tileType))); 
-                    
-                    // Put tile into grid
-                    grid[i][j] = {
-                        id: index++,
-                        type: tileType,
-                        x: i,
-                        y: j,
-                        removed: false,
-                        newbie: true
-                    };
                 }
-            }
 
-            $scope.grid = angular.copy(grid);
-            $scope.$digest();
+                $scope.grid = angular.copy(grid);
+                $scope.$digest();
+
+                setTimeout(() => {
+                    // Perform falling animations to the newbies
+                    for (let i = 0; i < changesMap.length; i++) {
+                        grid[changesMap[i].x][changesMap[i].y].newbie = false;
+                    }
+
+                    // Wait animation end
+                    setTimeout(() => { filled(); }, SWAP_ANIMATION_DURATION);
+
+                    $scope.grid = angular.copy(grid);
+                    $scope.$digest();
+                }, 0);
+            });
         };
 
         // Get current filled grid as a one-dimensional array
@@ -445,9 +460,12 @@ export default {
                     if (matches.length > 0) {
                         // Remove them
                         removeTiles(matches).then(() => {
-                            shiftExistingTiles().then(() => {
-                                fillHoles();
-                                detectPossibleSwaps();
+                            // Shift tiles to fill holes down
+                            shiftTiles().then(changedGrid => {
+                                // Fill holes up
+                                fillHoles(changedGrid).then(() => {
+                                    detectPossibleSwaps();
+                                });
                             });
                         });
 
