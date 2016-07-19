@@ -22,28 +22,51 @@ export default ['$scope', function($scope) {
     $scope.level = null;
 
     $scope.startGame = () => {
-        $scope.gameStarted = !$scope.gameStarted;
-        $scope.totalScore = 0;
-        $scope.loadLevel(LEVELS[0]);
+        // Stop game
+        if ($scope.gameStarted === true) {
+            $scope.gameStarted = false;
+
+            // End level if needed
+            if ($scope.startLevel === true) {
+                $scope.startLevel();
+            }
+        // Start game
+        } else {
+            $scope.gameStarted = true;
+
+            $scope.totalScore = 0;            
+            $scope.loadLevel(LEVELS[0]);
+        }
     };
 
     $scope.loadLevel = (level) => {
         $scope.level = level;
+
+        $scope.score = 0;
+
+        $scope.timer = null;
+        $scope.timeLeft = level.time * 1000;
     };
 
     $scope.startLevel = (level) => {
-        if ($scope.totalScore > 0 && $scope.score > 0) {
-            $scope.totalScore -= $scope.score;
+        // Stop level
+        if ($scope.levelStarted === true) {
+            $scope.levelStarted = false;
+
+            if ($scope.totalScore > 0 && $scope.score > 0) {
+                $scope.totalScore -= $scope.score;
+            }
+        // Start level
+        } else {
+            $scope.levelStarted = true;
+
+            $scope.loadLevel(level);
+            $scope.generateLevel(level);
+
+            // $scope.timer = setInterval(() => {
+
+            // });
         }
-
-        $scope.score = 0;
-        $scope.timeLeft = null;
-        $scope.timer = null;
-
-        $scope.levelStarted = true;
-
-        $scope.loadLevel(level);
-        $scope.generateLevel(level);
     };
 
     $scope.increaseScore = (value) => {

@@ -12,8 +12,8 @@
             <span ng-show="gameStarted">End Game</span>
         </div>
         <div class="button" ng-if="gameStarted" ng-click="startLevel(level)">
-            <span ng-show="!levelStarted">Start Level</span>
-            <span ng-show="levelStarted">Restart Level</span>
+            <span ng-show="!levelStarted">Go</span>
+            <span ng-show="levelStarted">Stop</span>
         </div>
 
         <span ng-if="levelStarted">Счет: {{score}}</span>
