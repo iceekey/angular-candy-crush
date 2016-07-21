@@ -1,5 +1,6 @@
 @import '~reset-css/_reset.scss';
 @import 'fonts';
+@import 'modal';
 
 $remove-animation-duration: .55s !default;
 $swap-animation-duration: .25s !default; 
@@ -23,7 +24,7 @@ $score-font-size: 24px !default;
 
 @mixin text() {
   font-family: 'Roboto Condensed', Arial, sans-serif;
-  font-size: 15px;
+  font-size: 18px;
   font-weight: 300;
 }
 
@@ -43,6 +44,36 @@ $score-font-size: 24px !default;
   font-weight: 700;
 
   line-height: 1;
+}
+
+@mixin header-text() {
+  @include text();
+
+  font-size: 28px;
+  font-weight: 700;
+
+  line-height: 1.2;
+}
+
+b, strong {
+  @include text();
+
+  font-weight: 700;
+}
+
+.header {
+  @include header-text();
+
+  display: block;
+  margin-bottom: 25px;
+}
+
+p {
+  @include text();
+
+  + p { margin-top: 10px; }
+  
+  + .button { margin-top: 25px }
 }
 
 // Animations
@@ -113,7 +144,7 @@ body {
       $zeroOffsetY: $y - 1;
 
       $newX: ($tile-size + $tile-padding) * $zeroOffsetX;
-      $newY: ($tile-size + $tile-padding) * $zeroOffsetY + ($tile-size - $score-font-size) / 2;
+      $newY: ($tile-size + $tile-padding) * $zeroOffsetY + ($tile-size + $tile-padding - $score-font-size) / 2;
 
       @keyframes scoreAnimation-#{$x}-#{$y} {
         0% { transform: translate($newX, $newY); }

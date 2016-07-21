@@ -25,6 +25,7 @@ module.exports = {
             { test: /\.js$/, exclude: /node_modules/, loader: 'babel', query: { presets: ['es2015'] } },
             { test: /\.(html|json)$/, loader: 'raw' },
             { test: /\.scss$/, loader: scss.extract('style-loader', 'css!postcss!sass') },
+            { test: /\.css$/, loader: scss.extract('style-loader', 'css!postcss') },
             { test: /\.(jpg|jpeg|gif|png|ico)$/, exclude: /node_modules/, loader: `file-loader?name=images/[name].[ext]` },
             { test: /.*signs.*\.svg$/, exclude: /node_modules/, loader: `file-loader?name=images/signs/[name].[ext]` },
             { test: /.*fonts.*\.svg$/, loader: 'file-loader?mimetype=image/svg+xml&name=fonts/[name].[ext]' },

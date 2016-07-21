@@ -18,6 +18,13 @@
 
         <span ng-if="levelStarted">Счет: {{score}}</span>
         <span ng-if="gameStarted">Общий счет: {{totalScore}}</span>
+
+        <span ng-if="gameStarted">
+            <span ng-show="!levelStarted">Время: {{getHumanTime(timeLeft)}}</span>
+            <span ng-show="levelStarted">Времени осталось: {{getHumanTime(timeLeft)}}</span>
+        </span>
+
+        <span ng-if="gameStarted">Цель: {{level.targetScore}}</span>
         <grid on-score-increased="increaseScore(value)"></grid>
     </div>
 </body>

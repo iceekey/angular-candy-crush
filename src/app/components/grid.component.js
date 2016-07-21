@@ -173,6 +173,28 @@ export default {
             $scope.grid = angular.copy(grid);
         };
 
+        let clearGrid = () => {
+            $scope.playgroundLocked = true;
+            let grid = $scope.grid, changedGrid = angular.copy(grid);
+            for(let i = 0; i < GRID_COLUMNS_COUNT; i++) {
+                for(let j = 0; j < GRID_ROWS_COUNT; j++) {
+                    if (grid[i][j] !== null) {
+                        grid[i][j].removed = true;
+                        changedGrid[i][j] = null;
+                    }
+                }
+            }
+
+            // Remove items after animation ends
+            setTimeout(() => {
+                $scope.grid = changedGrid;
+                $scope.$digest();
+            }, REMOVE_ANIMATION_DURATION);
+
+            $scope.grid = angular.copy(grid);
+        };
+        $scope.$parent.clearGrid = clearGrid;
+
         // Helper function to detect swaps
         let hasChainAtColumn = (grid, column, row) => {
             let tileType = grid[column][row].type;

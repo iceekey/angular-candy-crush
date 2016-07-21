@@ -14,8 +14,10 @@ export const GRID_ROWS_COUNT = 9;
 export const SWAP_ANIMATION_DURATION = 250;
 export const REMOVE_ANIMATION_DURATION = 550;
 export const SCORE_ANIMATION_DURATION = 800;
+export const POP_MESSAGE_ANIMATION_DURATION = 2000;
 
 export const LEVELS = [angular.fromJson(Level0)];
+export const LEVELS_COUNT = 3;
 
 export const CHAIN_REMOVE_COST = 10000;
 export const CHAIN_LENGTH_BONUS = 4000;
