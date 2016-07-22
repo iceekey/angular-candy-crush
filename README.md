@@ -10,6 +10,8 @@ What about this game:
 * Easy to install
 * Cyrillic characters support
 
+### [Demo](http://surgeon-frog-83146.bitballoon.com/)
+
 ## Installation guide
 
 Download repository from git:
