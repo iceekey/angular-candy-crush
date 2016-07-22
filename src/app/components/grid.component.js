@@ -189,7 +189,6 @@ export default {
                 }, REMOVE_ANIMATION_DURATION);
                 
                 $scope.grid = angular.copy(grid);
-                $scope.$digest();
             };
             document.addEventListener('comboend', comboEndHandler);
 
@@ -570,7 +569,6 @@ export default {
                 if ($scope.possibleSwaps.length <= 0) {
                     resetGrid();
                 } else {
-                    $scope.$digest();
                     // Enable playground
                     $scope.playgroundLocked = false;
                 }
