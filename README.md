@@ -29,7 +29,7 @@ Run application (webpack-dev-server, you can change default port in `webpack.con
 npm start
 ```
 
-Build application (dist directory) to deploy on a server:
+Or you can build application (dist directory) to deploy on a server:
 
 ```bash
 npm run build
