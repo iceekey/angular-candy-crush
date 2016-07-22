@@ -7,25 +7,42 @@
 </head>
 <body>
     <div class="game-wrapper" ng-app="app" ng-controller="GameController">
-        <div class="button" ng-click="startGame()">
-            <span ng-show="!gameStarted">Start Game</span>
-            <span ng-show="gameStarted">End Game</span>
+        <div class="game-behavior">
+            <div class="game-start">
+                <div class="button" ng-click="startGame()">
+                    <span ng-show="!gameStarted">Play</span>
+                    <span ng-show="gameStarted">End Game</span>
+                </div>
+            </div>
+
+            <div class="header">Candy Crush Saga Clone Angular.js</div>
+            <p>
+                Your goal is to get as many points as you can by forming matching
+                combinations of the road signs. The time is limited, so you
+                gotta hurry!
+            </p>
+
+            <p class="indent" ng-if="gameStarted">
+                <span  class="subheader" ng-show="!levelStarted">Time: {{getHumanTime(level.time * 1000)}}</span>
+                <span  class="subheader" ng-show="levelStarted">Time left: {{getHumanTime(timeLeft)}}</span>
+                
+                <span class="subheader" ng-if="!levelStarted">Gloal: {{getDelimitedNumber(level.targetScore)}}</span>
+                <span class="subheader" ng-if="levelStarted">Score: {{getDelimitedNumber(score)}} ({{getScorePercent()}}%)</span>
+            </p>
+
+            <p ng-if="gameStarted">
+                <span ng-if="gameStarted">Total: {{totalScore}}</span>
+            </p>
+
+            <div class="button" ng-if="gameStarted" ng-click="startLevel(level)">
+                <span ng-show="!levelStarted">Start Level {{levelNum + 1}}</span>
+                <span ng-show="levelStarted">Stop</span>
+            </div>
         </div>
-        <div class="button" ng-if="gameStarted" ng-click="startLevel(level)">
-            <span ng-show="!levelStarted">Go</span>
-            <span ng-show="levelStarted">Stop</span>
+
+        <div class="game-playground">
+            <grid on-score-increased="increaseScore(value)"></grid>
         </div>
-
-        <span ng-if="levelStarted">Счет: {{score}}</span>
-        <span ng-if="gameStarted">Общий счет: {{totalScore}}</span>
-
-        <span ng-if="gameStarted">
-            <span ng-show="!levelStarted">Время: {{getHumanTime(timeLeft)}}</span>
-            <span ng-show="levelStarted">Времени осталось: {{getHumanTime(timeLeft)}}</span>
-        </span>
-
-        <span ng-if="gameStarted">Цель: {{level.targetScore}}</span>
-        <grid on-score-increased="increaseScore(value)"></grid>
     </div>
 </body>
 </html>

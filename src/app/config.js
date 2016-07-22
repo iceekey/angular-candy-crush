@@ -2,6 +2,8 @@
 import angular from 'angular';
 
 import Level0 from './levels/level-01.json';
+import Level1 from './levels/level-02.json';
+import Level2 from './levels/level-03.json';
 
 // Configuration
 
@@ -14,9 +16,8 @@ export const GRID_ROWS_COUNT = 9;
 export const SWAP_ANIMATION_DURATION = 250;
 export const REMOVE_ANIMATION_DURATION = 550;
 export const SCORE_ANIMATION_DURATION = 800;
-export const POP_MESSAGE_ANIMATION_DURATION = 2000;
 
-export const LEVELS = [angular.fromJson(Level0)];
+export const LEVELS = [angular.fromJson(Level0), angular.fromJson(Level1), angular.fromJson(Level2)];
 export const LEVELS_COUNT = 3;
 
 export const CHAIN_REMOVE_COST = 10000;

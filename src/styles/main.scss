@@ -6,17 +6,19 @@ $remove-animation-duration: .55s !default;
 $swap-animation-duration: .25s !default; 
 $score-animation-duration: .95s !default;
 
+$game-behavior-width: 350px !default;
+
 $grid-columns-count: 9 !default;
 $grid-rows-count: 9 !default;
 
 $tile-padding: 10px !default;
-$tile-size: 40px !default;
+$tile-size: 44px !default;
 
 $grid-width: $grid-columns-count * ($tile-size + $tile-padding) + $tile-padding  !default;
 $grid-height: $grid-rows-count * ($tile-size + $tile-padding) + $tile-padding !default;
 
-$button-height: 40px !default;
-$button-font-size: 18px !default;
+$button-height: 38px !default;
+$button-font-size: 20px !default;
 
 $score-font-size: 24px !default;
 
@@ -26,6 +28,8 @@ $score-font-size: 24px !default;
   font-family: 'Roboto Condensed', Arial, sans-serif;
   font-size: 18px;
   font-weight: 300;
+
+  line-height: 1.3;
 }
 
 @mixin score-text() {
@@ -49,11 +53,23 @@ $score-font-size: 24px !default;
 @mixin header-text() {
   @include text();
 
-  font-size: 28px;
+  font-size: 36px;
   font-weight: 700;
 
-  line-height: 1.2;
+  color: #2c3e50;
+  line-height: 1.1;
 }
+
+@mixin subheader-text() {
+  @include text();
+
+  font-size: 24px;
+  font-weight: 700;
+
+  color: #2c3e50;
+  line-height: 1.1;
+}
+
 
 b, strong {
   @include text();
@@ -68,8 +84,16 @@ b, strong {
   margin-bottom: 25px;
 }
 
+.subheader {
+  @include subheader-text();
+
+  display: block;
+}
+
 p {
   @include text();
+
+  &.indent { margin-top: 25px; }
 
   + p { margin-top: 10px; }
   
@@ -104,27 +128,56 @@ body {
 
 // General
 
+.center {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
 .button {
   @include button-text();
 
   display: inline-block;
   cursor: pointer;
 
-  padding: (($button-height - $button-font-size) / 2) 12px;
+  padding: (($button-height - $button-font-size) / 2) 24px;
   
   white-space: nowrap;
-  color: #996633;
+  color: #fff;
 
-  text-shadow: 0 1px 0 #fedd9b;
   transition: all 0.3s linear;
-  background: -webkit-linear-gradient(top, #feda71 0%, #febb4a 100%);
-  
-  border: 1px solid #f5b74e;
-  border-color: #f5b74e #e5a73e; 
+  background-color: #2ecc71;
 
   border-radius: 2px;
-  box-shadow: 0 1px 1px #d3d3d3, inset 0 1px 0 #fee395;
-  height: 38px;
+  height: $button-height;
+  
+  background-image: linear-gradient(transparent,rgba(0, 0, 0, .06));
+  text-align: center;
+
+  &:active { box-shadow: 0 0 0 1px rgba(0,0,0,.15) inset, 0 0 6px rgba(0,0,0,.2) inset; }
+}
+
+// Layout 
+
+
+.game-wrapper {
+  width: $grid-width + $game-behavior-width;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.game-start {
+  padding-bottom: 30px;
+}
+
+.game-behavior {
+  width: $game-behavior-width;
+  float: left;
+  padding: 45px 25px 45px 0; 
+}
+
+.game-playground {
+  margin-left: $game-behavior-width;
 }
 
 // Game elements
@@ -135,8 +188,7 @@ body {
   display: inline-block; 
   position: absolute;
 
-  color: #690;
-  text-shadow: 0 1px 1px #d3d3d3;
+  color:#34495e;
 
   @for $x from 1 through $grid-columns-count {
     @for $y from 1 through $grid-rows-count {

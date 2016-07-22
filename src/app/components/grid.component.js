@@ -17,6 +17,8 @@ function getRandomTileType() {
     return Math.floor(Math.random() * 5);
 }
 
+var ComboEnd = new Event('comboend');
+
 // Grid Compoenent
 export default {
     template: `
@@ -60,11 +62,6 @@ export default {
         $scope.scoreBanners = [];
 
         $scope.$parent.generateLevel = (level) => {
-            if ($scope.level !== null) {
-                resetGrid();
-                return;
-            }
-
             $scope.level = level;
             createTiles();
         };
@@ -73,12 +70,8 @@ export default {
         let createTiles = () => {
             $scope.playgroundLocked = true;
 
-            let grid = $scope.grid, tileType, firstTime = false;
+            let grid = $scope.grid, tileType;
             let level = $scope.level;
-
-            if (grid.length <= 0) {
-                firstTime = true;
-            }
 
             if (!level.hasOwnProperty('tiles') || !angular.isArray(level.tiles)) {
                 throw new Error(`Level configuration's damaged`);
@@ -144,10 +137,6 @@ export default {
             }, 0);
 
             $scope.grid = angular.copy(grid);
-            
-            if (!firstTime) {
-                $scope.$digest();
-            }
         };
 
         let resetGrid = () => {
@@ -173,25 +162,45 @@ export default {
             $scope.grid = angular.copy(grid);
         };
 
+        $scope.cleared = null;
         let clearGrid = () => {
-            $scope.playgroundLocked = true;
-            let grid = $scope.grid, changedGrid = angular.copy(grid);
-            for(let i = 0; i < GRID_COLUMNS_COUNT; i++) {
-                for(let j = 0; j < GRID_ROWS_COUNT; j++) {
-                    if (grid[i][j] !== null) {
-                        grid[i][j].removed = true;
-                        changedGrid[i][j] = null;
+            let comboEndHandler = () => {
+                document.removeEventListener('comboend', comboEndHandler);
+                
+                let grid = $scope.grid, changedGrid = angular.copy(grid);
+                for(let i = 0; i < GRID_COLUMNS_COUNT; i++) {
+                    for(let j = 0; j < GRID_ROWS_COUNT; j++) {
+                        if (grid[i][j] !== null) {
+                            grid[i][j].removed = true;
+                            changedGrid[i][j] = null;
+                        }
                     }
                 }
-            }
 
-            // Remove items after animation ends
-            setTimeout(() => {
-                $scope.grid = changedGrid;
+                // Remove items after animation ends
+                setTimeout(() => {
+                    $scope.grid = changedGrid;
+                    $scope.$digest();
+
+                    if ($scope.cleared !== null) {
+                        $scope.cleared();
+                        $scope.cleared = null;
+                    }
+                }, REMOVE_ANIMATION_DURATION);
+                
+                $scope.grid = angular.copy(grid);
                 $scope.$digest();
-            }, REMOVE_ANIMATION_DURATION);
+            };
+            document.addEventListener('comboend', comboEndHandler);
 
-            $scope.grid = angular.copy(grid);
+            if($scope.playgroundLocked === false) {
+                document.dispatchEvent(ComboEnd);
+            }
+            $scope.playgroundLocked = true;
+
+            return new Promise(cleared => {
+                $scope.cleared = cleared;
+            });
         };
         $scope.$parent.clearGrid = clearGrid;
 
@@ -555,6 +564,8 @@ export default {
                 $scope.xBonus = 0;
                 
                 detectPossibleSwaps();
+                document.dispatchEvent(ComboEnd);
+
                 // Reset grid if there's no more swaps
                 if ($scope.possibleSwaps.length <= 0) {
                     resetGrid();

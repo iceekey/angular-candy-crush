@@ -1,15 +1,14 @@
 'use strict';
 
-import {LEVELS, LEVELS_COUNT, POP_MESSAGE_ANIMATION_DURATION} from './../config';
+import {LEVELS, LEVELS_COUNT} from './../config';
 
 // Game Controller
-export default ['$scope', 'ResultModal', function($scope, $modal) {
+export default ['$scope', 'ResultModal', 'ModalData', function($scope, $modal, $data) {
     
     $scope.gameStarted = false;
     $scope.gameFinished = false;
 
     $scope.levelStarted = false;
-    $scope.levelFinished = false;
 
     // Game total score
     $scope.totalScore = 0;
@@ -53,28 +52,34 @@ export default ['$scope', 'ResultModal', function($scope, $modal) {
         }
         
         $scope.level = level;
-        $scope.score = 0;
 
         $scope.timer = null;
         $scope.timeLeft = level.time * 1000;
-        $modal.activate();
     };
 
+    $scope.goButtonLocked = false;
     $scope.startLevel = (level) => {
+        if ($scope.goButtonLocked === true) {
+            return;
+        }
+
         // Stop level
         if ($scope.levelStarted === true) {
+            $scope.goButtonLocked = true;
             $scope.levelStarted = false;
-            $scope.levelFinished = false;
 
             clearInterval($scope.timer);
 
-            if ($scope.totalScore > 0 && $scope.score > 0) {
-                $scope.totalScore -= $scope.score;
-            }
+            $scope.clearGrid().then(() => {
+                $scope.goButtonLocked = false;
+                
+                if ($scope.totalScore > 0 && $scope.score > 0) {
+                    $scope.totalScore -= $scope.score;
+                }
+            });
         // Start level
         } else {
             $scope.levelStarted = true;
-            $scope.levelFinished = false;
 
             $scope.loadLevel(level);
             $scope.generateLevel(level);
@@ -83,28 +88,37 @@ export default ['$scope', 'ResultModal', function($scope, $modal) {
                 $scope.timeLeft -= 1000;
 
                 if ($scope.timeLeft <= 0) {
-                    $scope.timeLeft = 0;
                     clearInterval($scope.timer);
 
+                    $scope.timer = null;
+                    $scope.timeLeft = $scope.level.time;
+
                     $scope.levelStarted = false;
-                    $scope.levelFinished = true;
-                    $scope.clearGrid();
-
-                    if ($scope.score >= $scope.level.targetScore) {
-                        if ($scope.levelNum + 1 === LEVELS_COUNT) {
-                            $scope.popMessage = `You won the game. Congratulations!`;
+                    $scope.clearGrid().then(() => {
+                        if ($scope.score >= $scope.level.targetScore) {
+                            if ($scope.levelNum + 1 === LEVELS_COUNT) {
+                                $data.message = `You won the game. Congratulations!`;
+                                // Stop game
+                                $scope.startGame();
+                            } else {
+                                $data.message = `Level's completed successfully!`;
+                                $scope.loadLevel(LEVELS[++$scope.levelNum]);
+                            }
                         } else {
-                            $scope.popMessage = `Level is completed successfully!`;
+                            $data.message = `Oops... not enough points.`;
+                            $scope.totalScore -= $scope.score;
                         }
-                    } else {
-                        $scope.popMessage = `Oops... not enough points. Try again.`;
-                    }
 
-                    setTimeout(function() {
-                        $scope.popMessage = null;
-                        $scope.$digest();
-                    }, POP_MESSAGE_ANIMATION_DURATION);
+                        $data.score = $scope.score;
+                        $data.targetScore = $scope.level.targetScore;
+                        $data.totalScore = $scope.totalScore;
+
+                        $scope.score = 0;
+
+                        $modal.activate();
+                    });
                 }
+
                 $scope.$digest();
             }, 1000);
         }
@@ -133,25 +147,30 @@ export default ['$scope', 'ResultModal', function($scope, $modal) {
         let hours = Math.floor(mins / 60);
 
         if (hours > 0) {
-            result += hours.toString() + ' ч. ';
+            result += hours.toString() + ' h. ';
         }
-
 
         mins = mins - hours * 60;
         if (mins > 0) {
-            result += mins.toString() + ' мин. ';
+            result += mins.toString() + ' m. ';
         }
 
         seconds = seconds - hours * 3600 - mins * 60;
         if (seconds > 0)  {
-            result += seconds.toString() + ' сек.';
+            result += seconds.toString() + ' s.';
         }
 
         return result;
     };
 
-    $scope.getTimeLeftPercent = () => {
-        return Math.floor($scope.timeLeft / $scope.level.time);
+    $scope.getScorePercent = () => {
+        return Math.floor(($scope.score / $scope.level.targetScore) * 100);
+    };
+
+    $scope.getDelimitedNumber = (n) => {
+        return n.toString().replace(/./g, function(c, i, a) {
+            return i && c !== '.' && ((a.length - i) % 3 === 0) ? ',' + c : c;
+        });
     };
 
     $scope.$watch('timeLeft');
