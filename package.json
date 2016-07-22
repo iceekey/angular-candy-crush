@@ -1,6 +1,6 @@
 {
   "name": "angular-three-in-a-row",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "A small Candy Crush Saga clone using road signs as tiles and written in Angular.",
   "scripts": {
     "start": "webpack-dev-server --inline --progress",
