@@ -368,7 +368,6 @@ export default {
                 // Remove items after animation ends
                 setTimeout(() => {
                     $scope.grid = changedGrid;
-                    $scope.$digest();
                     removed();
                 }, REMOVE_ANIMATION_DURATION);
 
@@ -441,9 +440,7 @@ export default {
 
                 // Actually move items
                 shifted(changedGrid); 
-
                 $scope.grid = angular.copy(grid);
-                $scope.$digest();
             });
         };
 
@@ -497,7 +494,6 @@ export default {
                     setTimeout(() => { filled(); }, SWAP_ANIMATION_DURATION);
 
                     $scope.grid = angular.copy(grid);
-                    $scope.$digest();
                 }, 0);
             });
         };
