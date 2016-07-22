@@ -95,6 +95,10 @@ export default ['$scope', 'ResultModal', 'ModalData', function($scope, $modal, $
 
                     $scope.levelStarted = false;
                     $scope.clearGrid().then(() => {
+                        $data.score = $scope.score;
+                        $data.targetScore = $scope.level.targetScore;
+                        $data.totalScore = $scope.totalScore;
+
                         if ($scope.score >= $scope.level.targetScore) {
                             if ($scope.levelNum + 1 === LEVELS_COUNT) {
                                 $data.message = `You won the game. Congratulations!`;
@@ -107,14 +111,10 @@ export default ['$scope', 'ResultModal', 'ModalData', function($scope, $modal, $
                         } else {
                             $data.message = `Oops... not enough points.`;
                             $scope.totalScore -= $scope.score;
+                            $data.totalScore = $scope.totalScore;
                         }
 
-                        $data.score = $scope.score;
-                        $data.targetScore = $scope.level.targetScore;
-                        $data.totalScore = $scope.totalScore;
-
                         $scope.score = 0;
-
                         $modal.activate();
                     });
                 }
