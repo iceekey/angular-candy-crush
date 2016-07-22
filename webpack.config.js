@@ -39,7 +39,7 @@ module.exports = {
         extensions: ['', '.js', '.ts']
     },
     postcss: function () {
-        return [precss, autoprefixer];
+        return [precss, autoprefixer({ browsers: ['last 3 versions'] })];
     },
     plugins: [html, scss],
     devServer: {
