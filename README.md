@@ -17,6 +17,13 @@ Download repository from git:
 ```bash
 git clone https://github.com/iceekey/angular-three-in-a-row.git
 ```
+
+Go to directory:
+
+```bash
+cd angular-three-in-a-row
+```
+
 Install dependencies:
 
 ```bash
