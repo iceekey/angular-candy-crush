@@ -42,8 +42,5 @@ module.exports = {
         return [precss, autoprefixer({ browsers: ['last 3 versions'] })];
     },
     plugins: [html, scss],
-    devServer: {
-        historyApiFallback: true,
-        port: 2000
-    }
+    devServer: { port: 2000 }
 };
