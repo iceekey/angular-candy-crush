@@ -31,7 +31,7 @@
             </p>
 
             <p ng-if="gameStarted">
-                <span ng-if="gameStarted">Total: {{totalScore}}</span>
+                <span ng-if="gameStarted">Total: {{getDelimitedNumber(totalScore)}}</span>
             </p>
 
             <div class="button" ng-if="gameStarted" ng-click="startLevel(level)">

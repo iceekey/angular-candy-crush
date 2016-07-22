@@ -19,7 +19,7 @@ function getRandomTileType() {
 
 var ComboEnd = new Event('comboend');
 
-// Grid Compoenent
+// Grid Component
 export default {
     template: `
     <tile 
