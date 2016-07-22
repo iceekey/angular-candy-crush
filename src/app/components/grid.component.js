@@ -640,6 +640,7 @@ export default {
             
             // Cancel if it's impossible move
             if (pulledXY === null) {
+                $scope.playgroundLocked = false;
                 return;
             }
 
