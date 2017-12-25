@@ -1,22 +1,22 @@
 # Candy Crush Saga Clone Angular.js
 A small Candy Crush Saga clone that uses road signs instead of candies and written on Angular.js.
 
-### Warning! This is my university project (low quality code). It hasn't changed since then. You could play the demo and use this code in your purposes on your own risk.
+### Warning! This is my university project (low quality code) 😅. It hasn't changed since then. You could play the demo and use this code in your purposes on your own risk.
 
-What about this game:
+About the Game:
 
-* Angular.js
+* Angular.js is used (hate this framework, actually, so... not my best code so far)
 * Webpack bundling
-* No unnecessary libraries (like lodash.js)
+* No unnecessary libraries (like lodash.js, simple and compact)
 * High configurability (check configuration file)
-* Easy to install
-* Cyrillic characters support
+* Easy to install (You Don't Say?) 
+* Cyrillic characters support (because I'm Russian), and I guess, grammar is incorrect in this game, but who cares? 😜
 
 ### [Demo](http://surgeon-frog-83146.bitballoon.com/)
 
 ## Installation guide
 
-Download repository from git:
+Clone repository from git:
 
 ```bash
 git clone https://github.com/iceekey/angular-three-in-a-row.git
