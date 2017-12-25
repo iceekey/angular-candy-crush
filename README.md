@@ -1,7 +1,7 @@
 # Candy Crush Saga Clone Angular.js
 A small Candy Crush Saga clone that uses road signs instead of candies and written on Angular.js.
 
-## Warning! Warning! This is my university project (low quality code). It hasn't changed since then. You could play the demo and use this code in your purposes on your own risk.
+### Warning! This is my university project (low quality code). It hasn't changed since then. You could play the demo and use this code in your purposes on your own risk.
 
 What about this game:
 
